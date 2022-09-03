@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
+from django.core import validators
 from django.db import models
 from django.db.models.signals import post_save
-from django.core import validators
 from django.dispatch import receiver
 
 User = get_user_model()
@@ -13,7 +13,7 @@ class Ingredient(models.Model):
         max_length=200)
     measurement_unit = models.CharField(
         'Единица измерения ингредиента',
-        max_length=200)
+        max_length=100)
 
     class Meta:
         ordering = ['name']
@@ -35,7 +35,7 @@ class Tag(models.Model):
         unique=True)
     slug = models.SlugField(
         'Ссылка',
-        max_length=100,
+        max_length=70,
         unique=True)
 
     class Meta:
@@ -99,10 +99,10 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         related_name='ingredient')
     amount = models.PositiveSmallIntegerField(
-        default=1,
+        default=0.5,
         validators=(
             validators.MinValueValidator(
-                1, message='Мин. количество ингридиентов 1'),),
+                0.5, message='Мин. количество ингридиентов 0.5'),),
         verbose_name='Количество',)
 
     class Meta:
@@ -113,6 +113,9 @@ class RecipeIngredient(models.Model):
             models.UniqueConstraint(
                 fields=['recipe', 'ingredient'],
                 name='unique ingredient')]
+
+    def __str__(self):
+        return f'{self.recipe}'
 
 
 class Subscribe(models.Model):
@@ -147,7 +150,7 @@ class FavoriteRecipe(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        null=True,
+        blank=True,
         related_name='favorite_recipe',
         verbose_name='Пользователь')
     recipe = models.ManyToManyField(
@@ -175,7 +178,7 @@ class ShoppingCart(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='shopping_cart',
-        null=True,
+        blank=True,
         verbose_name='Пользователь')
     recipe = models.ManyToManyField(
         Recipe,

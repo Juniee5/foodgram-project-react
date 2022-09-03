@@ -1,12 +1,13 @@
-from django.core.exceptions import ValidationError
 import django_filters as filters
+from django.core.exceptions import ValidationError
 
-from users.models import User
 from recipes.models import Ingredient, Recipe
+from users.models import User
 
 
 class TagsMultipleChoiceField(
-        filters.fields.MultipleChoiceField):
+        filters.fields.MultipleChoiceField
+):
     def validate(self, value):
         if self.required and not value:
             raise ValidationError(
