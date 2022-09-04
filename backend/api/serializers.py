@@ -151,7 +151,7 @@ class RecipeUserSerializer(
         )
 
 
-class IngredientsEditSerializer(serializers.ModelSerializer):
+class IngredientEditSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField()
     amount = serializers.IntegerField()
@@ -170,7 +170,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(
         many=True,
         queryset=Tag.objects.all())
-    ingredients = IngredientsEditSerializer(
+    ingredients = IngredientEditSerializer(
         many=True)
 
     class Meta:
@@ -216,7 +216,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                     'Количество ингредиента >= 0.5!')
         return ingredients
 
-    def create_ingredients(self, ingredients, recipe):
+    @staticmethod
+    def __create_ingredients(ingredients, recipe):
         RecipeIngredient.objects.bulk_create([
             RecipeIngredient(recipe=recipe),
             RecipeIngredient(ingredient_id='id'),

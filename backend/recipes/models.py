@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core import validators
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
 
 User = get_user_model()
 
@@ -13,7 +12,7 @@ class Ingredient(models.Model):
         max_length=200)
     measurement_unit = models.CharField(
         'Единица измерения ингредиента',
-        max_length=100)
+        max_length=50)
 
     class Meta:
         ordering = ['name']
@@ -150,7 +149,6 @@ class FavoriteRecipe(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        blank=True,
         related_name='favorite_recipe',
         verbose_name='Пользователь')
     recipe = models.ManyToManyField(
@@ -166,19 +164,12 @@ class FavoriteRecipe(models.Model):
         list_ = [item['name'] for item in self.recipe.values('name')]
         return f'Пользователь {self.user} добавил {list_} в избранные.'
 
-    @receiver(post_save, sender=User)
-    def create_favorite_recipe(
-            sender, instance, created, **kwargs):
-        if created:
-            return FavoriteRecipe.objects.create(user=instance)
-
 
 class ShoppingCart(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         related_name='shopping_cart',
-        blank=True,
         verbose_name='Пользователь')
     recipe = models.ManyToManyField(
         Recipe,
@@ -193,9 +184,3 @@ class ShoppingCart(models.Model):
     def __str__(self):
         list_ = [item['name'] for item in self.recipe.values('name')]
         return f'Пользователь {self.user} добавил {list_} в покупки.'
-
-    @receiver(post_save, sender=User)
-    def create_shopping_cart(
-            sender, instance, created, **kwargs):
-        if created:
-            return ShoppingCart.objects.create(user=instance)

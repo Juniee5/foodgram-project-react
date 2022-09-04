@@ -5,29 +5,22 @@ from django.http import FileResponse
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 
-from ..foodgram.settings import FILENAME
+from backend.foodgram.settings import FILENAME
 
 
-@action(
-    detail=False,
-    methods=['get'],
-    permission_classes=(IsAuthenticated,))
-def download_shopping_cart(self, request):
+def download_shopping_cart(get):
     """Качаем список с ингредиентами."""
     A_POS = 50
     B_POS = 800
     C_POS = 14
     D_POS = 20
-    I_POS = 15
-    F_POS = 24
+    E_POS = 15
     buffer = io.BytesIO()
     page = canvas.Canvas(buffer)
     pdfmetrics.registerFont(TTFont('Vera', 'Vera.ttf'))
     shopping_cart = (
-        request.user.shopping_cart.recipe.
+        get.user.shopping_cart.recipe.
         values(
             'ingredients__name',
             'ingredients__measurement_unit'
@@ -42,7 +35,7 @@ def download_shopping_cart(self, request):
                 f'{index}. {recipe["ingredients__name"]} - '
                 f'{recipe["amount"]} '
                 f'{recipe["ingredients__measurement_unit"]}.')
-            A_POS -= I_POS
+            A_POS -= E_POS
             if A_POS <= A_POS:
                 page.showPage()
                 A_POS = B_POS

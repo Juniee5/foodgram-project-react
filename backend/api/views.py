@@ -1,25 +1,29 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.db.models.aggregates import Count
 from django.db.models.expressions import Exists, OuterRef, Value
+from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
-from mixins import PermissionAndPaginationMixin
 from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action, api_view
-from rest_framework.permissions import (SAFE_METHODS, AllowAny,
-                                        IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.permissions import (
+    SAFE_METHODS, AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly,
+)
 from rest_framework.response import Response
 
 from api.filters import IngredientFilter, RecipeFilter
-from recipes.models import (FavoriteRecipe, Ingredient, Recipe, ShoppingCart,
-                            Subscribe, Tag)
+from api.mixins import PermissionAndPaginationMixin
+from recipes.models import (
+    FavoriteRecipe, Ingredient, Recipe, ShoppingCart, Subscribe, Tag,
+)
 
-from .serializers import (IngredientSerializer, RecipeReadSerializer,
-                          RecipeWriteSerializer, SubscribeSerializer,
-                          TagSerializer, TokenSerializer, UserCreateSerializer,
-                          UserListSerializer, UserPasswordSerializer)
+from .serializers import (
+    IngredientSerializer, RecipeReadSerializer, RecipeWriteSerializer,
+    SubscribeSerializer, TagSerializer, TokenSerializer,
+    UserCreateSerializer, UserListSerializer, UserPasswordSerializer,
+)
 
 User = get_user_model()
 
@@ -67,7 +71,8 @@ class UsersViewSet(UserViewSet):
 
     @action(
         detail=False,
-        permission_classes=(IsAuthenticated,))
+        permission_classes=(IsAuthenticated,)
+    )
     def subscriptions(self, request):
         """Получить на кого пользователь подписан."""
 
@@ -78,6 +83,34 @@ class UsersViewSet(UserViewSet):
             pages, many=True,
             context={'request': request})
         return self.get_paginated_response(serializer.data)
+
+    @action(
+        detail=False,
+        permission_classes=(IsAuthenticated,)
+    )
+    def get_queryset(self):
+        return self.request.user.follower.select_related(
+            'following'
+        ).prefetch_related(
+            'following__recipe'
+        ).annotate(
+            recipes_count=Count('following__recipe'),
+            is_subscribed=Value(True), )
+
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+        user = get_object_or_404(User, id=user_id)
+        self.check_object_permissions(self.request, user)
+        return user
+
+    def create(self, request, *args, **kwargs):
+        instance = self.get_object()
+        subs = request.user.follower.create(author=instance)
+        serializer = self.get_serializer(subs)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def perform_destroy(self, instance):
+        self.request.user.follower.filter(author=instance).delete()
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
@@ -113,6 +146,32 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @action(
+        detail=False,
+        permission_classes=(IsAuthenticated,)
+    )
+    def create(self, request, *args, **kwargs):
+        instance = self.get_object()
+        request.user.favorite_recipe.recipe.add(instance)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def perform_destroy(self, instance):
+        self.request.user.favorite_recipe.recipe.remove(instance)
+
+    @action(
+        detail=False,
+        permission_classes=(IsAuthenticated,)
+    )
+    def create(self, request, *args, **kwargs):
+        instance = self.get_object()
+        request.user.shopping_cart.recipe.add(instance)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def perform_destroy(self, instance):
+        self.request.user.shopping_cart.recipe.remove(instance)
 
 
 class TagsViewSet(

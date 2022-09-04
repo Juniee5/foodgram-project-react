@@ -5,7 +5,7 @@ from recipes.models import Ingredient, Recipe
 from users.models import User
 
 
-class TagsMultipleChoiceField(
+class TagMultipleChoiceField(
         filters.fields.MultipleChoiceField
 ):
     def validate(self, value):
@@ -21,8 +21,8 @@ class TagsMultipleChoiceField(
                     params={'value': val},)
 
 
-class TagsFilter(filters.AllValuesMultipleFilter):
-    field_class = TagsMultipleChoiceField
+class TagFilter(filters.AllValuesMultipleFilter):
+    field_class = TagMultipleChoiceField
 
 
 class IngredientFilter(filters.FilterSet):
