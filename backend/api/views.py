@@ -18,7 +18,6 @@ from api.mixins import PermissionAndPaginationMixin
 from recipes.models import (
     FavoriteRecipe, Ingredient, Recipe, ShoppingCart, Subscribe, Tag,
 )
-
 from .serializers import (
     IngredientSerializer, RecipeReadSerializer, RecipeWriteSerializer,
     SubscribeSerializer, TagSerializer, TokenSerializer,
@@ -88,7 +87,7 @@ class UsersViewSet(UserViewSet):
         detail=False,
         permission_classes=(IsAuthenticated,)
     )
-    def get_queryset(self):
+    def get_following(self):
         return self.request.user.follower.select_related(
             'following'
         ).prefetch_related(
@@ -151,7 +150,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         detail=False,
         permission_classes=(IsAuthenticated,)
     )
-    def create(self, request, *args, **kwargs):
+    def create_favorite(self, request, *args, **kwargs):
         instance = self.get_object()
         request.user.favorite_recipe.recipe.add(instance)
         serializer = self.get_serializer(instance)
@@ -164,7 +163,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         detail=False,
         permission_classes=(IsAuthenticated,)
     )
-    def create(self, request, *args, **kwargs):
+    def get_crate(self, request, *args, **kwargs):
         instance = self.get_object()
         request.user.shopping_cart.recipe.add(instance)
         serializer = self.get_serializer(instance)

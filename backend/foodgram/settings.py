@@ -62,8 +62,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-FILENAME = 'shoppingcart.pdf'
-
 DATABASES = {
     'default': {
         'ENGINE': os.getenv(
