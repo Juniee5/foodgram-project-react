@@ -13,6 +13,7 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 
+from .utils import get_shopping_list
 from api.filters import IngredientFilter, RecipeFilter
 from api.mixins import PermissionAndPaginationMixin
 from recipes.models import (
@@ -43,7 +44,7 @@ class AuthToken(ObtainAuthToken):
             status=status.HTTP_201_CREATED)
 
 
-class UsersViewSet(UserViewSet):
+class UserViewSet(UserViewSet):
     """Пользователи."""
 
     serializer_class = UserListSerializer
@@ -112,7 +113,7 @@ class UsersViewSet(UserViewSet):
         self.request.user.follower.filter(author=instance).delete()
 
 
-class RecipesViewSet(viewsets.ModelViewSet):
+class RecipeViewSet(viewsets.ModelViewSet):
     """Рецепты."""
 
     queryset = Recipe.objects.all()
@@ -143,6 +144,17 @@ class RecipesViewSet(viewsets.ModelViewSet):
             'tags', 'ingredients', 'recipe',
             'shopping_cart', 'favorite_recipe')
 
+    @action(
+        detail=False,
+        methods=['GET'],
+        permission_classes=[IsAuthenticated]
+    )
+    def download_shopping_cart(self, request):
+        try:
+            return get_shopping_list(request)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
@@ -163,7 +175,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         detail=False,
         permission_classes=(IsAuthenticated,)
     )
-    def get_crate(self, request, *args, **kwargs):
+    def get_shopping_card(self, request, *args, **kwargs):
         instance = self.get_object()
         request.user.shopping_cart.recipe.add(instance)
         serializer = self.get_serializer(instance)
@@ -173,7 +185,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         self.request.user.shopping_cart.recipe.remove(instance)
 
 
-class TagsViewSet(
+class TagViewSet(
         PermissionAndPaginationMixin,
         viewsets.ModelViewSet
 ):
@@ -183,7 +195,7 @@ class TagsViewSet(
     serializer_class = TagSerializer
 
 
-class IngredientsViewSet(
+class IngredientViewSet(
         PermissionAndPaginationMixin,
         viewsets.ModelViewSet
 ):

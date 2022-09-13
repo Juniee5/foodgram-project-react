@@ -1,33 +1,30 @@
 from django.http import HttpResponse
+from django.db.models.aggregates import Sum
 
-from recipes.models import ShoppingCart
+from recipes.models import Recipe
 
 
-def download_shopping_cart(request):
+def get_shopping_list(request):
     """Качаем список с ингредиентами."""
-    shopping_cart = ShoppingCart.objects.filter(user=request.user).all()
+    user = request.get.user
+    recipes = Recipe.objects.filter(
+        in_favourites__user=user,
+        in_favourites__is_in_shopping_cart=True
+    )
+    ingredients = recipes.values(
+        'ingredients__name',
+        'ingredients__measurement_unit__name').order_by(
+        'ingredients__name').annotate(
+        ingredients_total=Sum('ingredient_amounts__amount')
+    )
     shopping_list = {}
-    for item in shopping_cart:
-        for recipe_ingredient in item.recipe.recipe_ingredients.all():
-            ingredients__name = recipe_ingredient.ingredient.name
-            measuring_unit = recipe_ingredient.ingredient.measurement_unit
-            amount = recipe_ingredient.amount
-            if ingredients__name not in shopping_list:
-                shopping_list[ingredients__name] = {
-                    'ingredients__name': ingredients__name,
-                    'measurement_unit': measuring_unit,
-                    'amount': amount
-                }
-            else:
-                shopping_list[ingredients__name]['amount'] += amount
-    content = (
-        [f'{item["ingredients__name"]} ({item["measurement_unit"]}) '
-         f'- {item["amount"]}\n'
-         for item in shopping_list.values()]
-    )
-    filename = 'shoppingcart.pdf'
-    response = HttpResponse(content, content_type='text/plain')
-    response['Content-Disposition'] = (
-        'attachment; filename={0}'.format(filename)
-    )
-    return response
+    for item in ingredients:
+        title = item.get('ingredients__name')
+        count = str(item.get('ingredients_total')) + ' ' + item[
+            'ingredients__measurement_unit__name'
+        ]
+        shopping_list[title] = count
+    data = ''
+    for key, value in shopping_list.items():
+        data += f'{key} - {value}\n'
+    return HttpResponse(data, content_type='text/plain')
