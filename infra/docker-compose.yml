@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 services:
 
   db:
@@ -9,7 +9,7 @@ services:
       - ./.env
 
   backend:
-    image:
+    image: pasca5/foodg:latest
     restart: always
     volumes:
       - data_value:/code/data/
@@ -21,7 +21,7 @@ services:
       - ./.env
 
   frontend:
-    image:
+    image: pasca5/foodg:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
