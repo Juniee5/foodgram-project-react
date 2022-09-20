@@ -29,7 +29,7 @@ class PermissionAndPaginationMixin:
     pagination_class = None
 
 
-class GetIsSubscribedMixin:
+class GetIsMixin:
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user
