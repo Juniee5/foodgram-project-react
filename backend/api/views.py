@@ -8,22 +8,21 @@ from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action, api_view
-from rest_framework.permissions import (
-    SAFE_METHODS, AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly,
-)
+from rest_framework.permissions import (SAFE_METHODS, AllowAny,
+                                        IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from .utils import get_shopping_list
 from api.filters import IngredientFilter, RecipeFilter
 from api.mixins import PermissionAndPaginationMixin
-from recipes.models import (
-    FavoriteRecipe, Ingredient, Recipe, ShoppingCart, Subscribe, Tag,
-)
-from .serializers import (
-    IngredientSerializer, RecipeReadSerializer, RecipeWriteSerializer,
-    SubscribeSerializer, TagSerializer, TokenSerializer,
-    UserCreateSerializer, UserListSerializer, UserPasswordSerializer,
-)
+from recipes.models import (FavoriteRecipe, Ingredient, Recipe, ShoppingCart,
+                            Subscribe, Tag)
+
+from .serializers import (IngredientSerializer, RecipeReadSerializer,
+                          RecipeWriteSerializer, SubscribeSerializer,
+                          TagSerializer, TokenSerializer, UserCreateSerializer,
+                          UserListSerializer, UserPasswordSerializer)
+from .utils import get_shopping_list
 
 User = get_user_model()
 
@@ -150,10 +149,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated]
     )
     def download_shopping_cart(self, request):
-        try:
-            return get_shopping_list(request)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return get_shopping_list(request)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

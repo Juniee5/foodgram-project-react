@@ -2,9 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny
 
 from api.permissions import IsAdminOrReadOnly
-from recipes.models import (
-    FavoriteRecipe, Ingredient, Recipe, ShoppingCart, Subscribe, Tag,
-)
+from recipes.models import Recipe
 
 from .serializers import SubscribeRecipeSerializer
 
@@ -29,7 +27,7 @@ class PermissionAndPaginationMixin:
     pagination_class = None
 
 
-class GetIsSubscribedMixin:
+class GetIsMixin:
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user

@@ -1,5 +1,5 @@
-from django.http import HttpResponse
 from django.db.models.aggregates import Sum
+from django.http import HttpResponse
 
 from recipes.models import Recipe
 

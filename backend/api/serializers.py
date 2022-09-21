@@ -6,8 +6,9 @@ from drf_base64.fields import Base64ImageField
 from rest_framework import serializers, status
 from rest_framework.response import Response
 
-from api.mixins import GetIsSubscribedMixin
 from recipes.models import Ingredient, Recipe, RecipeIngredient, Subscribe, Tag
+
+from .mixins import GetIsMixin
 
 User = get_user_model()
 ERR_MSG = 'Не удается войти в систему с предоставленными учетными данными.'
@@ -48,7 +49,7 @@ class TokenSerializer(serializers.Serializer):
 
 
 class UserListSerializer(
-        GetIsSubscribedMixin,
+        GetIsMixin,
         serializers.ModelSerializer
 ):
     is_subscribed = serializers.BooleanField(read_only=True)
@@ -137,7 +138,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
 
 class RecipeUserSerializer(
-        GetIsSubscribedMixin,
+        GetIsMixin,
         serializers.ModelSerializer):
 
     is_subscribed = serializers.SerializerMethodField(
