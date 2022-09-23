@@ -116,4 +116,4 @@ sudo docker-compose exec backend python manage.py createsuperuser
 ```
 
 ##### Шаг 9. Проект запущен:
-Проект будет доступен по вашему IP-адресу..
+Проект будет доступен по вашему IP-адресу.
