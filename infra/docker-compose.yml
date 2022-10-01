@@ -9,7 +9,7 @@ services:
       - ./.env
 
   backend:
-    image: pasca5/foodg:latest
+    image: pasca5/backk:v1
     restart: always
     volumes:
       - data_value:/code/data/
@@ -21,7 +21,7 @@ services:
       - ./.env
 
   frontend:
-    image: pasca5/foodg:latest
+    image: pasca5/front:v1
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
@@ -30,7 +30,7 @@ services:
   nginx:
     image: nginx:1.19.3
     ports:
-      - 8080:80
+      - 80:80
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
