@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from recipes.models import Recipe
 
 
-def get_shopping_list(request):
+def get_shopping_list(request.user):
     """Качаем список с ингредиентами."""
     user = request.get.user
     recipes = Recipe.objects.filter(
