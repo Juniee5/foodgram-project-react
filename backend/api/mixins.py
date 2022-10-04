@@ -3,7 +3,6 @@ from rest_framework.permissions import AllowAny
 
 from api.permissions import IsAdminOrReadOnly
 from recipes.models import Recipe
-
 from .serializers import SubscribeRecipeSerializer
 
 
