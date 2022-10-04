@@ -17,13 +17,16 @@ from rest_framework.response import Response
 
 from api.filters import IngredientFilter, RecipeFilter
 from api.mixins import PermissionAndPaginationMixin
-from recipes.models import (FavoriteRecipe, Ingredient, Recipe, ShoppingCart,
-                            Subscribe, Tag)
-
-from .serializers import (IngredientSerializer, RecipeReadSerializer,
-                          RecipeWriteSerializer, SubscribeSerializer,
-                          TagSerializer, TokenSerializer, UserCreateSerializer,
-                          UserListSerializer, UserPasswordSerializer)
+from recipes.models import (
+  FavoriteRecipe, Ingredient, Recipe, 
+  ShoppingCart, Subscribe, Tag,
+)
+from .serializers import (
+  IngredientSerializer, RecipeReadSerializer,
+  RecipeWriteSerializer, SubscribeSerializer,
+  TagSerializer, TokenSerializer, UserCreateSerializer,
+  UserListSerializer, UserPasswordSerializer,
+)
 from .utils import get_shopping_list
 
 User = get_user_model()
