@@ -106,14 +106,10 @@ sudo docker-compose exec backend python manage.py migrate --noinput
 ```bash
 sudo docker-compose exec backend python manage.py collectstatic --noinput 
 ```
-###### Заполнить базу данных:
-```bash
-sudo docker-compose exec backend python manage.py loaddata fixtures/ingredients.json
-```
 ###### Создать суперпользователя Django:
 ```bash
 sudo docker-compose exec backend python manage.py createsuperuser
 ```
 
 ##### Шаг 9. Проект запущен:
-Проект будет доступен по http://51.250.103.90/ 
+Проект будет доступен по http://51.250.17.70/ 
