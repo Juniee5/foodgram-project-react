@@ -214,11 +214,8 @@ def set_password(request):
     serializer = UserPasswordSerializer(
         data=request.data,
         context={'request': request})
-    if serializer.is_valid():
-        serializer.save()
-        return Response(
-            {'message': 'Пароль изменен!'},
-            status=status.HTTP_201_CREATED)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
     return Response(
-        {'error': 'Введите верные данные!'},
-        status=status.HTTP_400_BAD_REQUEST)
+        {'message': 'Пароль изменен!'},
+        status=status.HTTP_201_CREATED)
