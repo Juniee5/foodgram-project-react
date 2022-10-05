@@ -113,3 +113,4 @@ sudo docker-compose exec backend python manage.py createsuperuser
 
 ##### Шаг 9. Проект запущен:
 Проект будет доступен по http://51.250.17.70/ 
+Данные для админки: lipatov_11@gmail.com : admin. Адресс: http://51.250.17.70/admin/
