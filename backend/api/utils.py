@@ -4,9 +4,8 @@ from django.http import HttpResponse
 from recipes.models import Recipe
 
 
-def get_shopping_list(request.user):
+def get_shopping_list(user):
     """Качаем список с ингредиентами."""
-    user = request.get.user
     recipes = Recipe.objects.filter(
         in_favourites__user=user,
         in_favourites__is_in_shopping_cart=True
