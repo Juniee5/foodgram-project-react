@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import (
   FavoriteRecipe, Ingredient, Recipe, 
-  RecipeIngredient,ShoppingCart, Subscribe, Tag,
+  RecipeIngredient,ShoppingCart, Tag
 )
 
 EMPTY_MSG = '-пусто-'
