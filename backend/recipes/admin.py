@@ -67,15 +67,6 @@ class IngredientAdmin(admin.ModelAdmin):
     empty_value_display = EMPTY_MSG
 
 
-@admin.register(Subscribe)
-class SubscribeAdmin(admin.ModelAdmin):
-    list_display = (
-        'id', 'user', 'author', 'created',)
-    search_fields = (
-        'user__email', 'author__email',)
-    empty_value_display = EMPTY_MSG
-
-
 @admin.register(FavoriteRecipe)
 class FavoriteRecipeAdmin(admin.ModelAdmin):
     list_display = (
