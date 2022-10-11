@@ -58,7 +58,7 @@ class UserListSerializer(
         fields = (
             'email', 'id', 'username',
             'first_name', 'last_name', 'is_subscribed',
-        )
+    )
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -77,9 +77,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class UserPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(
-        label='Новый пароль')
+        label='Новый пароль'
+    )
     current_password = serializers.CharField(
-        label='Текущий пароль')
+        label='Текущий пароль'
+    )
 
     def validate_current_password(self, current_password):
         user = self.context['request'].user
