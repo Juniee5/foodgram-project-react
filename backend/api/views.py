@@ -9,23 +9,23 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import action, api_view
 from rest_framework.permissions import (
-  SAFE_METHODS, AllowAny,
-  IsAuthenticated,
-  IsAuthenticatedOrReadOnly,
+    SAFE_METHODS, AllowAny,
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly
 )
 from rest_framework.response import Response
 
 from api.filters import IngredientFilter, RecipeFilter
 from api.mixins import PermissionAndPaginationMixin
 from recipes.models import (
-  FavoriteRecipe, Ingredient, Recipe, 
-  ShoppingCart, Subscribe, Tag,
+    FavoriteRecipe, Ingredient, Recipe, 
+    ShoppingCart, Subscribe, Tag
 )
 from .serializers import (
-  IngredientSerializer, RecipeReadSerializer,
-  RecipeWriteSerializer, SubscribeSerializer,
-  TagSerializer, TokenSerializer, UserCreateSerializer,
-  UserListSerializer, UserPasswordSerializer,
+    IngredientSerializer, RecipeReadSerializer,
+    RecipeWriteSerializer, SubscribeSerializer,
+    TagSerializer, TokenSerializer, UserCreateSerializer,
+    UserListSerializer, UserPasswordSerializer
 )
 from .utils import get_shopping_list
 
