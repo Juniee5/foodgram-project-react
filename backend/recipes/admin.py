@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 from .models import (
-  FavoriteRecipe, Ingredient, Recipe, 
-  RecipeIngredient,ShoppingCart, Tag
+    FavoriteRecipe, Ingredient, Recipe, 
+    RecipeIngredient,ShoppingCart, Tag
 )
 
 EMPTY_MSG = '-пусто-'
@@ -18,10 +18,12 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'get_author', 'name', 'text',
         'cooking_time', 'get_tags', 'get_ingredients',
-        'pub_date', 'get_favorite_count')
+        'pub_date', 'get_favorite_count'
+    )
     search_fields = (
         'name', 'cooking_time',
-        'author__email', 'ingredients__name')
+        'author__email', 'ingredients__name'
+    )
     list_filter = ('pub_date', 'tags',)
     inlines = (RecipeIngredientAdmin,)
     empty_value_display = EMPTY_MSG
