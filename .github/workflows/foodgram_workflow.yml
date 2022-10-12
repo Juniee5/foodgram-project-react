@@ -41,7 +41,7 @@ jobs:
             with:
               context: backend/
               push: true
-              tags: pasca5/backk:v1
+              tags: pasca5/baackkkk:v1
           - name: Push frontend
             uses: docker/build-push-action@v2 
             with:
@@ -62,7 +62,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull pasca5/backk:v1
+            sudo docker pull pasca5/baackkkk:v1
             cd infra/
             sudo docker-compose stop
             sudo docker-compose rm backend
