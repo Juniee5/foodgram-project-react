@@ -58,7 +58,7 @@ class UserListSerializer(
         fields = (
             'email', 'id', 'username',
             'first_name', 'last_name', 'is_subscribed',
-    )
+        )
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
