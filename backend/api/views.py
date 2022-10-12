@@ -18,7 +18,7 @@ from rest_framework.response import Response
 from api.filters import IngredientFilter, RecipeFilter
 from api.mixins import PermissionAndPaginationMixin
 from recipes.models import (
-    FavoriteRecipe, Ingredient, Recipe, 
+    FavoriteRecipe, Ingredient, Recipe,
     ShoppingCart, Subscribe, Tag
 )
 from .serializers import (
