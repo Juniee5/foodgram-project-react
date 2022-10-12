@@ -9,7 +9,7 @@ services:
       - ./.env
 
   backend:
-    image: pasca5/backk:v1
+    image: pasca5/baackkkk:v1
     restart: always
     volumes:
       - data_value:/code/data/
